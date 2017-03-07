@@ -105,12 +105,12 @@ TSS_BeginStringtable( cFS )
     TSS_StringEntry( fs::STR_PARSER_DEVICE,             _T("Device")),
     TSS_StringEntry( fs::STR_PARSER_HOSTNAME,               _T("HOSTNAME")),
 
-    TSS_StringEntry( fs::STR_FS_PARSER_READONLY_VAL,    _T("+pinugsmtdbCM-raclSH" ) ),
-    TSS_StringEntry( fs::STR_FS_PARSER_DYNAMIC_VAL,     _T("+pinugtd-rsacmblCMSH" ) ),
-    TSS_StringEntry( fs::STR_FS_PARSER_GROWING_VAL,     _T("+pinugtdl-rsacmbCMSH" ) ),
-    TSS_StringEntry( fs::STR_FS_PARSER_IGNOREALL_VAL,   _T("-pinusgamctdrblCMSH" ) ),
-    TSS_StringEntry( fs::STR_FS_PARSER_IGNORENONE_VAL,  _T("+pinusgamctdrbCMSH-l" ) ),
-    TSS_StringEntry( fs::STR_FS_PARSER_DEVICE_VAL,      _T("+pugsdr-intlbamcCMSH" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_READONLY_VAL,    _T("+pinugsmtdbC2-raclMSH5" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_DYNAMIC_VAL,     _T("+pinugtd-rsacmblCMSH25" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_GROWING_VAL,     _T("+pinugtdl-rsacmbCMSH25" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_IGNOREALL_VAL,   _T("-pinusgamctdrblCMSH25" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_IGNORENONE_VAL,  _T("+pinusgamctdrbCMSH25-l" ) ),
+    TSS_StringEntry( fs::STR_FS_PARSER_DEVICE_VAL,      _T("+pugsdr-intlbamcCMSH25" ) ),
     TSS_StringEntry( fs::STR_FS_PARSER_HOSTNAME_VAL,        _T("localhost" ) ),
     
     TSS_StringEntry( fs::STR_DIFFERENT_FILESYSTEM,      _T("The object: \"%s\" is on a different file system...ignoring.\n") ),
