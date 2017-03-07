@@ -214,6 +214,8 @@ C     CRC-32 hash value
 H     Haval hash value
 M     MD5 hash value
 S     SHA hash value
+2     SHA-256 hash value
+5     SHA-512 hash value
 .Fi
 .\"
 .SS Stop Points
@@ -474,7 +476,7 @@ to be read-only.
 Value:
 .ft CW
 .ps \n(.s-1
-\+pinugtsdbmCM\(hyrlacSH
+\+pinugtsdbmC2\(hyrlacMSH5
 .ps \n(.s+1
 .ft
 .IP Dynamic 15
@@ -484,7 +486,7 @@ be dynamic in behavior.
 Value:
 .ft CW
 .ps \n(.s-1
-+pinugtd\(hysrlbamcCMSH
++pinugtd\(hysrlbamcCMSH25
 .ps \n(.s+1
 .ft
 .IP Growing 15
@@ -493,7 +495,7 @@ The Growing variable is intended for files that should only get larger.
 Value:
 .ft CW
 .ps \n(.s-1
-\+pinugtdl\(hysrbamcCMSH 
+\+pinugtdl\(hysrbamcCMSH25
 .ps \n(.s+1
 .ft
 .IP Device 15 
@@ -503,7 +505,7 @@ attempt to open.
 Value:
 .ft CW
 .ps \n(.s-1
-\+pugsdr\(hyintlbamcCMSH
+\+pugsdr\(hyintlbamcCMSH25
 .ps \n(.s+1
 .ft R
 .IP IgnoreAll 15
@@ -513,7 +515,7 @@ other properties.
 Value:
 .ft CW
 .ps \n(.s-1
-\(hypinugtsdrlbamcCMSH
+\(hypinugtsdrlbamcCMSH25
 .ps \n(.s+1
 .ft
 .IP IgnoreNone 15
@@ -522,7 +524,7 @@ IgnoreNone turns on all properties and provides a convenient starting point for 
 Value:
 .ft CW
 .ps \n(.s-1
-\+pinugtsdrbamcCMSH\(hyl
+\+pinugtsdrbamcCMSH25\(hyl
 .ps \n(.s+1             
 .ft
 .SH VERSION INFORMATION

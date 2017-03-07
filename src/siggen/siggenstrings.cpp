@@ -64,6 +64,8 @@ TSS_BeginStringtable( cSiggen )
                 _T("  -M                   --MD5\n")
                 _T("  -S                   --SHA\n")
                 _T("  -H                   --HAVAL\n")
+                _T("  -2                   --SHA-256\n")
+                _T("  -5                   --SHA-512\n")
                 _T("file1 [file 2 ...]\n")
                 _T("\n")
               ),

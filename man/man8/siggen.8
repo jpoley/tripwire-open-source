@@ -19,6 +19,10 @@ siggen \- signature gathering routine for Tripwire
 .BR -S | --SHA
 ] [
 .BR -h | --HAVAL
+] [
+.BR -2 | --SHA256
+] [
+.BR -5 | --SHA512
 ]
 .IR file1 ,,,
 .SH DESCRIPTION
@@ -51,6 +55,12 @@ NIST Secure Hash Standard, SHS (NIST FIPS 180).
 .TP
 .BI \(hyH ", " --HAVAL
 Display Haval value, a 128-bit hash code.
+.TP
+.BI \(hy2 ", " --SHA-256
+Display SHA-256, the 256-bit SHA-2 hash algorithm.
+.TP
+.BI \(hy5 ", " --SHA-512
+Display SHA-512, the 512-bit SHA-2 hash algorithm.
 .TP
 .IR file1 " [ " "file2... " ]
 List of filesystem objects for which to display values.
