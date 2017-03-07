@@ -362,5 +362,83 @@ protected:
 
 };
 
+
+///////////////////////////////////////////////////////////////////////////////
+// class cSHA256Signature
+///////////////////////////////////////////////////////////////////////////////
+class cSHA256Signature : public iSignature
+{
+    DECLARE_TYPEDSERIALIZABLE()
+    
+public:
+    cSHA256Signature();
+    virtual ~cSHA256Signature();
+    
+    virtual void    Init  ();
+    virtual void    Update( const byte* const pbData, int cbDataLen );
+    virtual void    Finit ();
+    virtual TSTRING AsString() const;
+    virtual TSTRING AsStringHex() const;
+    virtual void    Copy(const iFCOProp* rhs);
+    
+    virtual void    Read (iSerializer* pSerializer, int32 version = 0);
+    virtual void    Write(iSerializer* pSerializer) const;
+    
+protected:
+    
+    virtual bool    IsEqual(const iSignature& rhs) const;
+    
+#ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
+    enum { SIG_UINT32_SIZE = CC_SHA256_DIGEST_LENGTH/4 };
+    CC_SHA256_CTX mSHAInfo;
+    uint32      sha_digest[SIG_UINT32_SIZE];
+#elif HAVE_OPENSSL_SHA_H
+    enum { SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4 };
+    SHA256_CTX     mSHAInfo;
+    uint32      sha_digest[SIG_UINT32_SIZE];
+#else
+    // not implemented
+#endif
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// class cSHA256Signature
+///////////////////////////////////////////////////////////////////////////////
+class cSHA512Signature : public iSignature
+{
+    DECLARE_TYPEDSERIALIZABLE()
+    
+public:
+    cSHA512Signature();
+    virtual ~cSHA512Signature();
+    
+    virtual void    Init  ();
+    virtual void    Update( const byte* const pbData, int cbDataLen );
+    virtual void    Finit ();
+    virtual TSTRING AsString() const;
+    virtual TSTRING AsStringHex() const;
+    virtual void    Copy(const iFCOProp* rhs);
+    
+    virtual void    Read (iSerializer* pSerializer, int32 version = 0);
+    virtual void    Write(iSerializer* pSerializer) const;
+    
+protected:
+    
+    virtual bool    IsEqual(const iSignature& rhs) const;
+    
+#ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
+    enum { SIG_UINT32_SIZE = CC_SHA512_DIGEST_LENGTH/4 };
+    CC_SHA512_CTX mSHAInfo;
+    uint32      sha_digest[SIG_UINT32_SIZE];
+#elif HAVE_OPENSSL_SHA_H
+    enum { SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4 };
+    SHA512_CTX     mSHAInfo;
+    uint32      sha_digest[SIG_UINT32_SIZE];
+#else
+    // not implemented
+#endif
+};
+
 #endif // __SIGNATURE_H
 

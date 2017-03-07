@@ -94,6 +94,8 @@ public:
         PROP_SHA,
         PROP_HAVAL,
         PROP_ACL,
+        PROP_SHA256,
+        PROP_SHA512,
 
         PROP_NUMITEMS
     };
@@ -161,7 +163,9 @@ public:
     PROPERTY_OBJ(cSHASignature,     SHA,            PROP_SHA)           
     PROPERTY_OBJ(cHAVALSignature,   HAVAL,          PROP_HAVAL)         
     //PROPERTY_OBJ(cUnixACL,        ACL,            PROP_ACL)  // will eventually be implememented
-         
+    PROPERTY_OBJ(cSHA256Signature,  SHA256,         PROP_SHA256)
+    PROPERTY_OBJ(cSHA512Signature,  SHA512,         PROP_SHA512)
+    
     // iSerializable interface
     virtual void Read (iSerializer* pSerializer, int32 version = 0); // throw (eSerializer, eArchive)
     virtual void Write(iSerializer* pSerializer) const; // throw (eSerializer, eArchive)

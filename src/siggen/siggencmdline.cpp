@@ -129,6 +129,8 @@ void cSiggenCmdLine::InitCmdLineParser(cCmdLineParser& parser)
     parser.AddArg(MD5,          TSTRING(_T("M")),   TSTRING(_T("MD5")),             cCmdLineParser::PARAM_NONE);
     parser.AddArg(SHA,          TSTRING(_T("S")),   TSTRING(_T("SHA")),             cCmdLineParser::PARAM_NONE);
     parser.AddArg(HAVAL,        TSTRING(_T("H")),   TSTRING(_T("HAVAL")),           cCmdLineParser::PARAM_NONE);
+    parser.AddArg(SHA256,       TSTRING(_T("2")),   TSTRING(_T("SHA-256")),             cCmdLineParser::PARAM_NONE);
+    parser.AddArg(SHA512,       TSTRING(_T("5")),   TSTRING(_T("SHA-512")),             cCmdLineParser::PARAM_NONE);
 
     //Output switches
     parser.AddArg(ALL,          TSTRING(_T("a")),   TSTRING(_T("all")),             cCmdLineParser::PARAM_NONE);
@@ -270,7 +272,7 @@ int cSiggenCmdLine::Init(cCmdLineParser& parser)
     cCmdLineIter iter(parser);      //iterator for traversing command line
     iter.SeekBegin();               
     int i = 0;                      //loop variable
-    bool crc_select = false, md5_select = false, sha_select = false, haval_select = false; 
+    bool crc_select = false, md5_select = false, sha_select = false, haval_select = false, sha256_select=false, sha512_select=false;
         //boolean locals for dealing with ALL switch. (temp.?) fix -DA
     bool switch_present = false;
     int ret = 0;                    //return value. will be false unless some file is specified. 
@@ -304,9 +306,19 @@ int cSiggenCmdLine::Init(cCmdLineParser& parser)
                 haval_select = switch_present = true;
                 break;
                 }
+            case SHA256:
+                {
+                sha256_select = switch_present = true;
+                break;
+                }
+            case SHA512:
+                {
+                sha512_select = switch_present = true;
+                break;
+                }
             case ALL:
                 {
-                crc_select = md5_select = sha_select = haval_select = switch_present = true;
+                crc_select = md5_select = sha_select = haval_select = sha256_select = sha512_select = switch_present = true;
                 break;
                 }
             case HEX:
@@ -333,7 +345,7 @@ int cSiggenCmdLine::Init(cCmdLineParser& parser)
 
     //Default behavior is to print all signatures if no switch is specified.
     if(!switch_present)
-        crc_select = md5_select = sha_select = haval_select = true;
+        crc_select = md5_select = sha_select = haval_select = sha256_select = sha512_select = true;
 
     //Push the signatures and their output identifiers onto the mSignature list:
     if(crc_select)
@@ -360,7 +372,18 @@ int cSiggenCmdLine::Init(cCmdLineParser& parser)
         TSTRING str = TSS_GetString( cFS, fs::STR_PROP_HAVAL);
         mpData->mSignatures.push_back(std::pair< iSignature*, TSTRING>(sig_ptr, str));
     }
-
+    if(sha256_select)
+    {
+        iSignature* sig_ptr = new cSHA256Signature;
+        TSTRING str = TSS_GetString( cFS, fs::STR_PROP_SHA256);
+        mpData->mSignatures.push_back(std::pair< iSignature*, TSTRING>(sig_ptr, str));
+    }
+    if(sha512_select)
+    {
+        iSignature* sig_ptr = new cSHA512Signature;
+        TSTRING str = TSS_GetString( cFS, fs::STR_PROP_SHA512);
+        mpData->mSignatures.push_back(std::pair< iSignature*, TSTRING>(sig_ptr, str));
+    }
     return ret;
 }
 

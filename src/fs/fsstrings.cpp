@@ -73,7 +73,9 @@ TSS_BeginStringtable( cFS )
     TSS_StringEntry( fs::STR_PROP_SHA,                  _T("SHA") ),
     TSS_StringEntry( fs::STR_PROP_HAVAL,                _T("HAVAL") ),
     TSS_StringEntry( fs::STR_PROP_ACL,                  _T("ACL Placeholder -- Not Implemented") ),
-    
+    TSS_StringEntry( fs::STR_PROP_SHA256,               _T("SHA-256") ),
+    TSS_StringEntry( fs::STR_PROP_SHA512,               _T("SHA-512") ),
+
     // TODO: get actual strings
     TSS_StringEntry( fs::STR_PARSER_PROP_DEV,           _T("unimplemented") ),
     TSS_StringEntry( fs::STR_PARSER_PROP_RDEV,          _T("unimplemented") ),

@@ -41,7 +41,10 @@
 // I changed this magic number in 2.1 since we now support versioning in the file header.  
 // (the old magic number was 0x00202039)
 // I generated the random number using the random.org web site.
-const uint32 FILE_HEADER_MAGIC_NUMBER = 0x78f9beb3; 
+const uint32 FILE_HEADER_MAGIC_NUMBER_230 = 0x78f9beb3;
+// New magic number for 2.5.0, since older OST binaries would be confused by newly added attributes. 
+const uint32 FILE_HEADER_MAGIC_NUMBER     = 0xda5815ce;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // class cFileHeaderID
@@ -168,7 +171,8 @@ void cFileHeader::Read(iSerializer* pSerializer, int32 /*version*/) // throw (eS
     cDebug d("cFileHeader::Read");
 
     pSerializer->ReadInt32(magicNumber);
-    if ((unsigned int)magicNumber != FILE_HEADER_MAGIC_NUMBER)
+    if ((unsigned int)magicNumber != FILE_HEADER_MAGIC_NUMBER
+	&& (unsigned int)magicNumber != FILE_HEADER_MAGIC_NUMBER_230)
     {
         d.TraceDebug("Bad magic number");
         throw eSerializerInputStreamFmt(pSerializer->GetFileName() );

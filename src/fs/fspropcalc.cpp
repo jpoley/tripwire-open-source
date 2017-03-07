@@ -289,7 +289,9 @@ void cFSPropCalc::VisitFSObject(cFSObject& obj)
             propsToCheck.ContainsItem(cFSPropSet::PROP_CRC32) ||
             propsToCheck.ContainsItem(cFSPropSet::PROP_MD5)   ||
             propsToCheck.ContainsItem(cFSPropSet::PROP_SHA)   ||
-            propsToCheck.ContainsItem(cFSPropSet::PROP_HAVAL)
+            propsToCheck.ContainsItem(cFSPropSet::PROP_HAVAL) ||
+            propsToCheck.ContainsItem(cFSPropSet::PROP_SHA256) ||
+            propsToCheck.ContainsItem(cFSPropSet::PROP_SHA512)
           )
         {
             cFileArchive    arch;
@@ -358,6 +360,18 @@ void cFSPropCalc::VisitFSObject(cFSObject& obj)
                     asg.AddSig( propSet.GetHAVAL() );
                 }
                 
+                if(propsToCheck.ContainsItem(cFSPropSet::PROP_SHA256))
+                {
+                    propSet.SetDefinedSHA256(true);
+                    asg.AddSig( propSet.GetSHA256() );
+                }
+                
+                if(propsToCheck.ContainsItem(cFSPropSet::PROP_SHA512))
+                {
+                    propSet.SetDefinedSHA512(true);
+                    asg.AddSig( propSet.GetSHA512() );
+                }
+                
                 //
                 // calculate the signatures
                 //
@@ -394,6 +408,12 @@ void cFSPropCalc::VisitFSObject(cFSObject& obj)
 
         if (propsToCheck.ContainsItem(cFSPropSet::PROP_HAVAL))
             propSet.SetDefinedHAVAL(false);
+
+        if (propsToCheck.ContainsItem(cFSPropSet::PROP_SHA256))
+            propSet.SetDefinedSHA256(false);
+        
+        if (propsToCheck.ContainsItem(cFSPropSet::PROP_SHA512))
+            propSet.SetDefinedSHA512(false);
     }
 }
 

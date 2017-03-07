@@ -119,7 +119,8 @@ cFCOPropVector cFSFactory::GetLooseDirMask() const
         vec.AddItem( cFSPropSet::PROP_MD5 );
         vec.AddItem( cFSPropSet::PROP_SHA );
         vec.AddItem( cFSPropSet::PROP_HAVAL );
-        
+        vec.AddItem( cFSPropSet::PROP_SHA256 );
+        vec.AddItem( cFSPropSet::PROP_SHA512 );
         bInit = true;
     }
 

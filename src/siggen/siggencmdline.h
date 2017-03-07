@@ -67,6 +67,8 @@ public:
         MD5,
         SHA,
         HAVAL,
+        SHA256,
+        SHA512,
 
         //Output switches:
         ALL,

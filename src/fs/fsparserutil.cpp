@@ -80,6 +80,8 @@ bool cFSParserUtil::MapStringToProperty( const TSTRING& str, int& propIndex ) co
             case 'S': propIndex = cFSPropSet::PROP_SHA;     break;
             case 'H': propIndex = cFSPropSet::PROP_HAVAL;   break;
             case 'l': propIndex = cFSPropSet::PROP_GROWING_FILE; break;
+            case '2': propIndex = cFSPropSet::PROP_SHA256;  break;
+            case '5': propIndex = cFSPropSet::PROP_SHA512;  break;
             default:  fMappedChar = false;                  break;
         }
     }
@@ -119,6 +121,10 @@ bool cFSParserUtil::MapStringToProperty( const TSTRING& str, int& propIndex ) co
             propIndex = cFSPropSet::PROP_HAVAL;
         else if( 0 == str.compare( TSS_GetString( cFS, fs::STR_PARSER_PROP_GROWING_FILE ) ) )
             propIndex = cFSPropSet::PROP_GROWING_FILE;
+        else if( 0 == str.compare( TSS_GetString( cFS, fs::STR_PARSER_PROP_SHA256 ) ) )
+            propIndex = cFSPropSet::PROP_SHA256;
+        else if( 0 == str.compare( TSS_GetString( cFS, fs::STR_PARSER_PROP_SHA512 ) ) )
+            propIndex = cFSPropSet::PROP_SHA512;
         else
             fMappedChar = false;
     }

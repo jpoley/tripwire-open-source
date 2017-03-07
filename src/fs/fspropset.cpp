@@ -103,7 +103,9 @@ static int cFSPropSet_PropNames [] =
     fs::STR_PROP_MD5,
     fs::STR_PROP_SHA,
     fs::STR_PROP_HAVAL,
-    fs::STR_PROP_ACL
+    fs::STR_PROP_ACL,
+    fs::STR_PROP_SHA256,
+    fs::STR_PROP_SHA512,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -308,6 +310,10 @@ const iFCOProp* cFSPropSet::GetPropAt(int index) const
         case PROP_ACL:
             ASSERT( false ); // unimplemented
             return NULL;
+        case PROP_SHA256:
+            return &mSHA256;
+        case PROP_SHA512:
+            return &mSHA512;
         default:
         {
             // bad parameter passed to GetPropAt
@@ -374,6 +380,10 @@ iFCOProp* cFSPropSet::GetPropAt(int index)
         case PROP_ACL:
             ASSERT( false ); // unimplemented
             return NULL;
+        case PROP_SHA256:
+            return &mSHA256;
+        case PROP_SHA512:
+            return &mSHA512;
         default:
         {
             // bad parameter passed to GetPropAt
