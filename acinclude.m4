@@ -1,4 +1,4 @@
-# Custom m4 macros for Open Source Tripwire 2.4.3
+# Custom m4 macros for Open Source Tripwire
 # a non-symlinky variant of AC_PROG_LN_S, via: http://www.opensource.apple.com/source/zsh/zsh-34/zsh/aclocal.m4
 #
 AC_DEFUN([AC_PROG_LN],
@@ -22,3 +22,4 @@ else
 fi
 AC_SUBST(LN)dnl
 ])
+

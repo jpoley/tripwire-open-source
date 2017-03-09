@@ -3,7 +3,7 @@
 #########################################################
 #########################################################
 ##
-## Tripwire(R) 2.4 Open Source install script
+## Tripwire(R) 2.5 Open Source install script
 ##
 #########################################################
 #########################################################
@@ -241,11 +241,9 @@ done
 cat << END_OF_TEXT
 
 Installer program for:
-Tripwire(R) 2.4 Open Source
+Tripwire(R) 2.5 Open Source
 
-Copyright (C) 1998-2000 Tripwire (R) Security Systems, Inc.  Tripwire (R)
-is a registered trademark of the Purdue Research Foundation and is
-licensed exclusively to Tripwire (R) Security Systems, Inc.
+Copyright (C) 1998-2017 Tripwire, Inc.  Tripwire (R) is a registered trademark of Tripwire, Inc.
 
 END_OF_TEXT
 
@@ -280,7 +278,7 @@ EULA_PATH="$TWLICENSEFILE"
 
 if [ "$PROMPT" = "true" ] ; then
   echo
-  echo "LICENSE AGREEMENT for Tripwire(R) 2.4 Open Source"
+  echo "LICENSE AGREEMENT for Tripwire(R) 2.5 Open Source"
   echo
   echo "Please read the following license agreement.  You must accept the"
   echo "agreement to continue installing Tripwire."
@@ -925,7 +923,7 @@ The installation succeeded.
 
 Please refer to $README_LOC
 for release information and to the printed user documentation
-for further instructions on using Tripwire 2.4 Open Source.
+for further instructions on using Tripwire 2.5 Open Source.
 
 END_OF_TEXT
 

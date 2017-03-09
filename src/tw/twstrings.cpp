@@ -51,7 +51,7 @@
 #define TSS_PRODUCT_NAME _T("Open Source Tripwire(R) " PACKAGE_VERSION ".")
 
 #define TSS_COPYRIGHT_NOTICE \
-_T("Open Source Tripwire 2.4 Portions copyright 2000-2017 Tripwire, Inc.  Tripwire is a registered\n\
+_T("Open Source Tripwire 2.5 Portions copyright 2000-2017 Tripwire, Inc.  Tripwire is a registered\n\
 trademark of Tripwire, Inc. This software comes with ABSOLUTELY NO WARRANTY;\n\
 for details use --version. This is free software which may be redistributed\n\
 or modified only under certain conditions; see COPYING for details.\n\
