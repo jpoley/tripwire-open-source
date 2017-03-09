@@ -6943,7 +6943,7 @@ if test "${with_ssl_dir+set}" = set; then :
 fi
 
 
-CORE_CRYPT_O="md5.o sha.o"
+CORE_CRYPT_O="md5.o sha.o sha2.o"
 if test "x${enable_openssl}" != "xno"
 then
  saved_LIBS="$LIBS"

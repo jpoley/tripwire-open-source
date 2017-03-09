@@ -1,88 +1,73 @@
-//
-// The developer of the original code and/or files is Tripwire, Inc.
-// Portions created by Tripwire, Inc. are copyright (C) 2000 Tripwire,
-// Inc. Tripwire is a registered trademark of Tripwire, Inc.  All rights
-// reserved.
-// 
-// This program is free software.  The contents of this file are subject
-// to the terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 2 of the License, or (at your
-// option) any later version.  You may redistribute it and/or modify it
-// only in compliance with the GNU General Public License.
-// 
-// This program is distributed in the hope that it will be useful.
-// However, this program is distributed AS-IS WITHOUT ANY
-// WARRANTY; INCLUDING THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS
-// FOR A PARTICULAR PURPOSE.  Please see the GNU General Public License
-// for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
-// USA.
-// 
-// Nothing in the GNU General Public License or any other license to use
-// the code or files shall permit you to use Tripwire's trademarks,
-// service marks, or other intellectual property without Tripwire's
-// prior written consent.
-// 
-// If you have any questions, please contact Tripwire, Inc. at either
-// info@tripwire.org or www.tripwire.org.
-//
-/* Useful defines/typedefs */
+/*
+ ---------------------------------------------------------------------------
+ Copyright (c) 2002, Dr Brian Gladman, Worcester, UK.   All rights reserved.
 
-#ifndef __SHA_H
-#define __SHA_H
+ LICENSE TERMS
 
-#ifndef __TYPES_H
-#include "types.h"
+ The free distribution and use of this software in both source and binary
+ form is allowed (with or without changes) provided that:
+
+   1. distributions of this source code include the above copyright
+      notice, this list of conditions and the following disclaimer;
+
+   2. distributions in binary form include the above copyright
+      notice, this list of conditions and the following disclaimer
+      in the documentation and/or other associated materials;
+
+   3. the copyright holder's name is not used to endorse products
+      built using this software without specific written permission.
+
+ ALTERNATIVELY, provided that this notice is retained in full, this product
+ may be distributed under the terms of the GNU General Public License (GPL),
+ in which case the provisions of the GPL apply INSTEAD OF those given above.
+
+ DISCLAIMER
+
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness
+ and/or fitness for purpose.
+ ---------------------------------------------------------------------------
+ Issue Date: 01/08/2005
+*/
+
+#ifndef _SHA1_H
+#define _SHA1_H
+
+#include <stdlib.h>
+#include "brg_types.h"
+
+#define SHA1_BLOCK_SIZE  64
+#define SHA1_DIGEST_SIZE 20
+
+#if defined(__cplusplus)
+extern "C"
+{
 #endif
 
-/* The SHS block size and message digest sizes, in bytes */
+/* type to hold the SHA256 context  */
 
-#define SHS_BLOCKSIZE   64
-#define SHS_DIGESTSIZE  20
+typedef struct
+{   uint_32t count[2];
+    uint_32t hash[5];
+    uint_32t wbuf[16];
+} sha1_ctx;
 
-/* The structure for storing SHS info */
+/* Note that these prototypes are the same for both bit and */
+/* byte oriented implementations. However the length fields */
+/* are in bytes or bits as appropriate for the version used */
+/* and bit sequences are input as arrays of bytes in which  */
+/* bit sequences run from the most to the least significant */
+/* end of each byte                                         */
 
-typedef struct {
-           uint32 digest[ 5 ];            /* Message digest */
-           uint32 countLo, countHi;       /* 64-bit bit count */
-           uint32 data[ 16 ];             /* SHS data buffer */
-           } SHS_INFO;
+VOID_RETURN sha1_compile(sha1_ctx ctx[1]);
 
-/* Whether the machine is little-endian or not */
+VOID_RETURN sha1_begin(sha1_ctx ctx[1]);
+VOID_RETURN sha1_hash(const unsigned char data[], unsigned long len, sha1_ctx ctx[1]);
+VOID_RETURN sha1_end(unsigned char hval[], sha1_ctx ctx[1]);
+VOID_RETURN sha1(unsigned char hval[], const unsigned char data[], unsigned long len);
 
-//int sig_sha_get();
-void shsInit(SHS_INFO *shsInfo);
-void shsUpdate(SHS_INFO* shsInfo, uint8* buffer, int count);
-void shsFinal(SHS_INFO* shsInfo);
+#if defined(__cplusplus)
+}
+#endif
 
-/* The next def turns on the change to the algorithm introduced by NIST at
- * the behest of the NSA.  It supposedly corrects a weakness in the original
- * formulation.  Bruce Schneier described it thus in a posting to the
- * Cypherpunks mailing list on June 21, 1994 (as told to us by Steve Bellovin):
- *
- *  This is the fix to the Secure Hash Standard, NIST FIPS PUB 180:
- *
- *       In Section 7 of FIPS 180 (page 9), the line which reads
- *
- *       "b) For t=16 to 79 let Wt = Wt-3 XOR Wt-8 XOR Wt-14 XOR
- *       Wt-16."
- *
- *       is to be replaced by
- *
- *       "b) For t=16 to 79 let Wt = S1(Wt-3 XOR Wt-8 XOR Wt-14 XOR
- *       Wt-16)."
- *
- *       where S1 is a left circular shift by one bit as defined in
- *       Section 3 of FIPS 180 (page 6):
- *
- *       S1(X) = (X<<1) OR (X>>31).
- *
- */
-
-#define NEW_SHA
-
-#endif //__SHA_H
-
+#endif

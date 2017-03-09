@@ -603,13 +603,8 @@ IMPLEMENT_TYPEDSERIALIZABLE(cSHASignature,  _T("cSHASignature"), 0, 1)
 
 cSHASignature::cSHASignature()
 {
-    memset( &mSHAInfo, 0, sizeof( mSHAInfo ) );
-
-#ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-     memset( sha_digest, 0, CC_SHA1_DIGEST_LENGTH );
-#elif HAVE_OPENSSL_SHA_H
-    memset( sha_digest, 0, SHA_DIGEST_LENGTH );
-#endif
+    memset( &mSHAInfo,  0, sizeof( mSHAInfo ) );
+    memset( sha_digest, 0, SIG_BYTE_SIZE );
 }
 
 cSHASignature::~cSHASignature()
@@ -622,8 +617,9 @@ void cSHASignature::Init()
 #elif HAVE_OPENSSL_SHA_H
     SHA1_Init( &mSHAInfo );
 #else
-    shsInit( &mSHAInfo );
+    sha1_begin(&mSHAInfo);
 #endif
+
 }
 
 void cSHASignature::Update( const byte* const pbData, int cbDataLen )
@@ -634,7 +630,7 @@ void cSHASignature::Update( const byte* const pbData, int cbDataLen )
 #elif HAVE_OPENSSL_SHA_H
     SHA1_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
 #else
-    shsUpdate( &mSHAInfo, (uint8*)pbData, cbDataLen );
+    sha1_hash( (uint8*)pbData, cbDataLen, &mSHAInfo );
 #endif
 }
 
@@ -645,13 +641,12 @@ void cSHASignature::Finit()
 #elif HAVE_OPENSSL_SHA_H
     SHA1_Final( (unsigned char *)sha_digest, &mSHAInfo );
 #else
-    shsFinal( &mSHAInfo );
+    sha1_end( (unsigned char *)sha_digest, &mSHAInfo );
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // AsString -- Converts to Base64 representation and returns a TSTRING
-#if defined(HAVE_OPENSSL_SHA_H) || defined(HAVE_COMMONCRYPTO_COMMONDIGEST_H)
 TSTRING cSHASignature::AsString(void) const
 {
     if (cArchiveSigGen::Hex())
@@ -724,81 +719,7 @@ bool cSHASignature::IsEqual(const iSignature& rhs) const
     }
 }
 
-#else // HAVE_OPENSSL_SHA_H
 
-TSTRING cSHASignature::AsString(void) const
-{
-    if (cArchiveSigGen::Hex())
-        return AsStringHex();
-    
-    TSTRING ret;
-    char* ps_signature;
-    char buf[100];
-    buf[99]=0;
-    
-    ps_signature = pltob64((uint32*)mSHAInfo.digest, buf, SIG_UINT32_SIZE);
-    //converting to base64 representation.
-    
-    ret.append(ps_signature);
-    return ret;
-    //return ret;
-}
-
-TSTRING cSHASignature::AsStringHex() const
-{
-    TSTRING ret;
-    
-    TCHAR stringBuffer[128];
-    TCHAR sigStringOut[128];
-    sigStringOut[0] = '\0';
-    
-    for (int i=0; i < SIG_UINT32_SIZE; ++i)
-    {
-        _stprintf(stringBuffer, _T("%08x"), mSHAInfo.digest[i]);
-        _tcscat(sigStringOut, stringBuffer);
-    }
-    ret.append(sigStringOut);
-    
-    return ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Copy -- Copies a new sig value from a base pointer
-void cSHASignature::Copy(const iFCOProp* rhs)
-{
-    ASSERT(GetType() == rhs->GetType());
-    for (int i = 0; i<SIG_UINT32_SIZE; ++i)
-        mSHAInfo.digest[i] = ((static_cast<const cSHASignature*>(rhs))->mSHAInfo.digest)[i];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Serializer Implementation: Read and Write
-void cSHASignature::Read (iSerializer* pSerializer, int32 version)
-{
-    if (version > Version())
-        ThrowAndAssert(eSerializerVersionMismatch(_T("SHA Read")));
-
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->ReadInt32((int32&)mSHAInfo.digest[i]);
-}
-
-void cSHASignature::Write(iSerializer* pSerializer) const
-{
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->WriteInt32(mSHAInfo.digest[i]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// IsEqual -- Tests for equality, given a base pointer (iSignature)
-bool cSHASignature::IsEqual(const iSignature& rhs) const
-{
-    if (this == &rhs)
-        return true;
-    else {
-        return (memcmp(mSHAInfo.digest, ((cSHASignature&)rhs).mSHAInfo.digest, SIG_UINT32_SIZE * sizeof(uint32)) == 0);
-    }
-}
-#endif
 ///////////////////////////////////////////////////////////////////////////////
 // class cHAVALSignature -- 
 ///////////////////////////////////////////////////////////////////////////////
@@ -898,9 +819,12 @@ bool cHAVALSignature::IsEqual(const iSignature & rhs) const
     }
 }
 
+/*VOID_RETURN sha256_begin(sha256_ctx ctx[1]);
+ VOID_RETURN sha256_hash(const unsigned char data[], unsigned long len, sha256_ctx ctx[1]);
+ VOID_RETURN sha256_end(unsigned char hval[], sha256_ctx ctx[1]);
+ */
 
-
-///////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////
 // class cSHA256Signature --   Implementation for cSHA256Signature:
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -909,12 +833,7 @@ IMPLEMENT_TYPEDSERIALIZABLE(cSHA256Signature,  _T("cSHA256Signature"), 0, 1)
 cSHA256Signature::cSHA256Signature()
 {
     memset( &mSHAInfo, 0, sizeof( mSHAInfo ) );
-    
-#ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-    memset( sha_digest, 0, CC_SHA256_DIGEST_LENGTH );
-#elif HAVE_OPENSSL_SHA_H
-    memset( sha_digest, 0, SHA_DIGEST_LENGTH );
-#endif
+    memset( sha_digest, 0, SIG_BYTE_SIZE );
 }
 
 cSHA256Signature::~cSHA256Signature()
@@ -927,7 +846,7 @@ void cSHA256Signature::Init()
 #elif HAVE_OPENSSL_SHA_H
     SHA256_Init( &mSHAInfo );
 #else
-    //not implemented
+    sha256_begin(&mSHAInfo);
 #endif
 }
 
@@ -939,7 +858,7 @@ void cSHA256Signature::Update( const byte* const pbData, int cbDataLen )
 #elif HAVE_OPENSSL_SHA_H
     SHA256_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
 #else
-    //not implemented
+    sha256_hash((uint8*)pbData, cbDataLen, &mSHAInfo);
 #endif
 }
 
@@ -950,13 +869,12 @@ void cSHA256Signature::Finit()
 #elif HAVE_OPENSSL_SHA_H
     SHA256_Final( (unsigned char *)sha_digest, &mSHAInfo );
 #else
-    //not implemented
+    sha256_end( (unsigned char *)sha_digest, &mSHAInfo );
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // AsString -- Converts to Base64 representation and returns a TSTRING
-#if defined(HAVE_OPENSSL_SHA_H) || defined(HAVE_COMMONCRYPTO_COMMONDIGEST_H)
 TSTRING cSHA256Signature::AsString(void) const
 {
     if (cArchiveSigGen::Hex())
@@ -1029,82 +947,6 @@ bool cSHA256Signature::IsEqual(const iSignature& rhs) const
     }
 }
 
-#else // HAVE_OPENSSL_SHA_H
-
-TSTRING cSHA256Signature::AsString(void) const
-{
-    if (cArchiveSigGen::Hex())
-        return AsStringHex();
-    
-    TSTRING ret;
-    char* ps_signature;
-    char buf[256];
-    buf[255]=0;
-    
-    ps_signature = pltob64((uint32*)mSHAInfo.digest, buf, SIG_UINT32_SIZE);
-    //converting to base64 representation.
-    
-    ret.append(ps_signature);
-    return ret;
-    //return ret;
-}
-
-TSTRING cSHA256Signature::AsStringHex() const
-{
-    TSTRING ret;
-    
-    TCHAR stringBuffer[256];
-    TCHAR sigStringOut[256];
-    sigStringOut[0] = '\0';
-    
-    for (int i=0; i < SIG_UINT32_SIZE; ++i)
-    {
-        _stprintf(stringBuffer, _T("%08x"), mSHAInfo.digest[i]);
-        _tcscat(sigStringOut, stringBuffer);
-    }
-    ret.append(sigStringOut);
-    
-    return ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Copy -- Copies a new sig value from a base pointer
-void cSHA256Signature::Copy(const iFCOProp* rhs)
-{
-    ASSERT(GetType() == rhs->GetType());
-    for (int i = 0; i<SIG_UINT32_SIZE; ++i)
-        mSHAInfo.digest[i] = ((static_cast<const cSHA256Signature*>(rhs))->mSHAInfo.digest)[i];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Serializer Implementation: Read and Write
-void cSHA256Signature::Read (iSerializer* pSerializer, int32 version)
-{
-    if (version > Version())
-        ThrowAndAssert(eSerializerVersionMismatch(_T("SHA256 Read")));
-    
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->ReadInt32((int32&)mSHAInfo.digest[i]);
-}
-
-void cSHA256Signature::Write(iSerializer* pSerializer) const
-{
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->WriteInt32(mSHAInfo.digest[i]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// IsEqual -- Tests for equality, given a base pointer (iSignature)
-bool cSHA256Signature::IsEqual(const iSignature& rhs) const
-{
-    if (this == &rhs)
-        return true;
-    else {
-        return (memcmp(mSHAInfo.digest, ((cSHA256Signature&)rhs).mSHAInfo.digest, SIG_UINT32_SIZE * sizeof(uint32)) == 0);
-    }
-}
-#endif
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // class cSHA512Signature --   Implementation for cSHA512Signature:
@@ -1115,12 +957,7 @@ IMPLEMENT_TYPEDSERIALIZABLE(cSHA512Signature,  _T("cSHA512Signature"), 0, 1)
 cSHA512Signature::cSHA512Signature()
 {
     memset( &mSHAInfo, 0, sizeof( mSHAInfo ) );
-    
-#ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-    memset( sha_digest, 0, CC_SHA512_DIGEST_LENGTH );
-#elif HAVE_OPENSSL_SHA_H
-    memset( sha_digest, 0, SHA_DIGEST_LENGTH );
-#endif
+    memset( sha_digest, 0, SIG_BYTE_SIZE );
 }
 
 cSHA512Signature::~cSHA512Signature()
@@ -1133,7 +970,7 @@ void cSHA512Signature::Init()
 #elif HAVE_OPENSSL_SHA_H
     SHA512_Init( &mSHAInfo );
 #else
-    //not implemented
+    sha512_begin(&mSHAInfo);
 #endif
 }
 
@@ -1145,7 +982,7 @@ void cSHA512Signature::Update( const byte* const pbData, int cbDataLen )
 #elif HAVE_OPENSSL_SHA_H
     SHA512_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
 #else
-    //not implemented
+    sha512_hash((uint8*)pbData, cbDataLen, &mSHAInfo);
 #endif
 }
 
@@ -1156,13 +993,12 @@ void cSHA512Signature::Finit()
 #elif HAVE_OPENSSL_SHA_H
     SHA512_Final( (unsigned char *)sha_digest, &mSHAInfo );
 #else
-    //not implemented
+    sha512_end( (unsigned char *)sha_digest, &mSHAInfo );
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // AsString -- Converts to Base64 representation and returns a TSTRING
-#if defined(HAVE_OPENSSL_SHA_H) || defined(HAVE_COMMONCRYPTO_COMMONDIGEST_H)
 TSTRING cSHA512Signature::AsString(void) const
 {
     if (cArchiveSigGen::Hex())
@@ -1234,81 +1070,5 @@ bool cSHA512Signature::IsEqual(const iSignature& rhs) const
         return (memcmp(sha_digest, ((cSHA512Signature&)rhs).sha_digest, SIG_UINT32_SIZE * sizeof(uint32)) == 0);
     }
 }
-
-#else // HAVE_OPENSSL_SHA_H
-
-TSTRING cSHA512Signature::AsString(void) const
-{
-    if (cArchiveSigGen::Hex())
-        return AsStringHex();
-    
-    TSTRING ret;
-    char* ps_signature;
-    char buf[512];
-    buf[99]=0;
-    
-    ps_signature = pltob64((uint32*)mSHAInfo.digest, buf, SIG_UINT32_SIZE);
-    //converting to base64 representation.
-    
-    ret.append(ps_signature);
-    return ret;
-    //return ret;
-}
-
-TSTRING cSHA512Signature::AsStringHex() const
-{
-    TSTRING ret;
-    
-    TCHAR stringBuffer[512];
-    TCHAR sigStringOut[512];
-    sigStringOut[0] = '\0';
-    
-    for (int i=0; i < SIG_UINT32_SIZE; ++i)
-    {
-        _stprintf(stringBuffer, _T("%08x"), mSHAInfo.digest[i]);
-        _tcscat(sigStringOut, stringBuffer);
-    }
-    ret.append(sigStringOut);
-    
-    return ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Copy -- Copies a new sig value from a base pointer
-void cSHA512Signature::Copy(const iFCOProp* rhs)
-{
-    ASSERT(GetType() == rhs->GetType());
-    for (int i = 0; i<SIG_UINT32_SIZE; ++i)
-        mSHAInfo.digest[i] = ((static_cast<const cSHA512Signature*>(rhs))->mSHAInfo.digest)[i];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Serializer Implementation: Read and Write
-void cSHA512Signature::Read (iSerializer* pSerializer, int32 version)
-{
-    if (version > Version())
-        ThrowAndAssert(eSerializerVersionMismatch(_T("SHA512 Read")));
-    
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->ReadInt32((int32&)mSHAInfo.digest[i]);
-}
-
-void cSHA512Signature::Write(iSerializer* pSerializer) const
-{
-    for (int i = 0; i < SIG_UINT32_SIZE; ++i)
-        pSerializer->WriteInt32(mSHAInfo.digest[i]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// IsEqual -- Tests for equality, given a base pointer (iSignature)
-bool cSHA512Signature::IsEqual(const iSignature& rhs) const
-{
-    if (this == &rhs)
-        return true;
-    else {
-        return (memcmp(mSHAInfo.digest, ((cSHA512Signature&)rhs).mSHAInfo.digest, SIG_UINT32_SIZE * sizeof(uint32)) == 0);
-    }
-}
-#endif
 
 

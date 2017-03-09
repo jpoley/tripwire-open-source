@@ -65,6 +65,7 @@
 # include <openssl/sha.h>
 #else
 # include "core/sha.h"
+# include "core/sha2.h"
 # define SHA_CTX SHS_INFO
 # ifndef SHA_DIGEST_LENGTH
 #  define SHA_DIGEST_LENGTH     20
@@ -317,17 +318,28 @@ protected:
     virtual bool    IsEqual(const iSignature& rhs) const;
     
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-    enum { SIG_UINT32_SIZE = CC_SHA1_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = CC_SHA1_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = CC_SHA1_DIGEST_LENGTH
+    };
     CC_SHA1_CTX mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
 #elif HAVE_OPENSSL_SHA_H
-    enum { SIG_UINT32_SIZE = SHA_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = SHA_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = SHA_DIGEST_LENGTH
+    };
     SHA_CTX     mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
 #else
-    enum { SIG_UINT32_SIZE = 5 };
-    SHS_INFO mSHAInfo;
+    enum
+    {
+        SIG_UINT32_SIZE = SHA1_DIGEST_SIZE/4,
+        SIG_BYTE_SIZE   = SHA_DIGEST_LENGTH
+    };
+    sha1_ctx mSHAInfo;
 #endif
+    uint32 sha_digest[SIG_UINT32_SIZE];
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -389,16 +401,31 @@ protected:
     virtual bool    IsEqual(const iSignature& rhs) const;
     
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-    enum { SIG_UINT32_SIZE = CC_SHA256_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = CC_SHA256_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = CC_SHA256_DIGEST_LENGTH
+    };
     CC_SHA256_CTX mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
+    
 #elif HAVE_OPENSSL_SHA_H
-    enum { SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = SHA256_DIGEST_LENGTH
+    };
     SHA256_CTX     mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
+
 #else
-    // not implemented
+    enum
+    {
+        SIG_UINT32_SIZE = SHA256_DIGEST_SIZE/4,
+        SIG_BYTE_SIZE   = SHA256_DIGEST_SIZE
+    };    
+    sha256_ctx mSHAInfo;
+    
 #endif
+    uint32      sha_digest[SIG_UINT32_SIZE];
 };
 
 
@@ -428,16 +455,31 @@ protected:
     virtual bool    IsEqual(const iSignature& rhs) const;
     
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-    enum { SIG_UINT32_SIZE = CC_SHA512_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = CC_SHA512_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = CC_SHA512_DIGEST_LENGTH
+    };
     CC_SHA512_CTX mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
+    
 #elif HAVE_OPENSSL_SHA_H
-    enum { SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4 };
+    enum
+    {
+        SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4,
+        SIG_BYTE_SIZE   = SHA512_DIGEST_LENGTH
+    };
     SHA512_CTX     mSHAInfo;
-    uint32      sha_digest[SIG_UINT32_SIZE];
+    
 #else
-    // not implemented
+    enum
+    {
+        SIG_UINT32_SIZE = SHA512_DIGEST_SIZE/4,
+        SIG_BYTE_SIZE   = SHA512_DIGEST_SIZE
+    };
+    
+    sha512_ctx mSHAInfo;
 #endif
+    uint32      sha_digest[SIG_UINT32_SIZE];
 };
 
 #endif // __SIGNATURE_H

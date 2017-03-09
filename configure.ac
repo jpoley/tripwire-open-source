@@ -332,7 +332,7 @@ AC_ARG_WITH(ssl-dir,
 dnl #################
 dnl Check for OpenSSL
 dnl #################
-CORE_CRYPT_O="md5.o sha.o"
+CORE_CRYPT_O="md5.o sha.o sha2.o"
 if test "x${enable_openssl}" != "xno"
 then
  saved_LIBS="$LIBS"
