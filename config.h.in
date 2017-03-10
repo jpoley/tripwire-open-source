@@ -57,6 +57,12 @@
 /* Define to 1 if you have the `posix_fadvise' function. */
 #undef HAVE_POSIX_FADVISE
 
+/* Define to 1 if you have the `SHA256_Init' function. */
+#undef HAVE_SHA256_INIT
+
+/* Define to 1 if you have the `SHA512_Init' function. */
+#undef HAVE_SHA512_INIT
+
 /* Define to 1 if you have the <signum.h> header file. */
 #undef HAVE_SIGNUM_H
 

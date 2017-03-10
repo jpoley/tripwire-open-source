@@ -78,6 +78,8 @@
 #endif
 
 
+
+
 #include "core/haval.h"
 // TODO: figure out a way to do this without including these headers.
 // pool of objects?
@@ -408,7 +410,7 @@ protected:
     };
     CC_SHA256_CTX mSHAInfo;
     
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA256_INIT //OpenSSL
     enum
     {
         SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4,
@@ -462,7 +464,7 @@ protected:
     };
     CC_SHA512_CTX mSHAInfo;
     
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA512_INIT
     enum
     {
         SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4,
