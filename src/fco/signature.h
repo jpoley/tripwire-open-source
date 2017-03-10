@@ -51,6 +51,10 @@
 #include <vector>
 #include "core/crc32.h"
 
+#if HAVE_OPENSSL_SHA_H && HAVE_SHA256_INIT && HAVE_SHA512_INIT
+# define USE_OPENSSL_SHA 1
+#endif 
+
 #ifdef HAVE_OPENSSL_MD5_H
 # include <openssl/md5.h>
 # define digest     data
@@ -61,7 +65,7 @@
 # endif
 #endif
 
-#ifdef HAVE_OPENSSL_SHA_H
+#ifdef USE_OPENSSL_SHA
 # include <openssl/sha.h>
 #else
 # include "core/sha.h"
@@ -326,7 +330,7 @@ protected:
         SIG_BYTE_SIZE   = CC_SHA1_DIGEST_LENGTH
     };
     CC_SHA1_CTX mSHAInfo;
-#elif HAVE_OPENSSL_SHA_H
+#elif USE_OPENSSL_SHA
     enum
     {
         SIG_UINT32_SIZE = SHA_DIGEST_LENGTH/4,
@@ -410,7 +414,7 @@ protected:
     };
     CC_SHA256_CTX mSHAInfo;
     
-#elif HAVE_SHA256_INIT //OpenSSL
+#elif USE_OPENSSL_SHA 
     enum
     {
         SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4,
@@ -464,7 +468,7 @@ protected:
     };
     CC_SHA512_CTX mSHAInfo;
     
-#elif HAVE_SHA512_INIT
+#elif USE_OPENSSL_SHA
     enum
     {
         SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4,
