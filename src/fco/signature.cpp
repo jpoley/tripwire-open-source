@@ -843,7 +843,7 @@ void cSHA256Signature::Init()
 {
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA256_Init( &mSHAInfo );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA256_INIT
     SHA256_Init( &mSHAInfo );
 #else
     sha256_begin(&mSHAInfo);
@@ -855,7 +855,7 @@ void cSHA256Signature::Update( const byte* const pbData, int cbDataLen )
     ASSERT( sizeof( byte ) == sizeof( uint8 ) );
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA256_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA256_INIT
     SHA256_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
 #else
     sha256_hash((uint8*)pbData, cbDataLen, &mSHAInfo);
@@ -866,7 +866,7 @@ void cSHA256Signature::Finit()
 {
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA256_Final( (unsigned char *)sha_digest, &mSHAInfo );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA256_INIT
     SHA256_Final( (unsigned char *)sha_digest, &mSHAInfo );
 #else
     sha256_end( (unsigned char *)sha_digest, &mSHAInfo );
@@ -967,7 +967,7 @@ void cSHA512Signature::Init()
 {
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA512_Init( &mSHAInfo );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA512_INIT
     SHA512_Init( &mSHAInfo );
 #else
     sha512_begin(&mSHAInfo);
@@ -979,7 +979,7 @@ void cSHA512Signature::Update( const byte* const pbData, int cbDataLen )
     ASSERT( sizeof( byte ) == sizeof( uint8 ) );
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA512_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA512_INIT
     SHA512_Update( &mSHAInfo, (uint8*)pbData, cbDataLen );
 #else
     sha512_hash((uint8*)pbData, cbDataLen, &mSHAInfo);
@@ -990,7 +990,7 @@ void cSHA512Signature::Finit()
 {
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
     CC_SHA512_Final( (unsigned char *)sha_digest, &mSHAInfo );
-#elif HAVE_OPENSSL_SHA_H
+#elif HAVE_SHA512_INIT
     SHA512_Final( (unsigned char *)sha_digest, &mSHAInfo );
 #else
     sha512_end( (unsigned char *)sha_digest, &mSHAInfo );

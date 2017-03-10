@@ -443,6 +443,7 @@ if (test ! -z "$ac_cv_openssldir" && test "x$ac_cv_openssldir" != "xnot found") 
 	fi
 	LIBS="$saved_LIBS -lcrypto"
         AC_CHECK_HEADERS(openssl/md5.h openssl/sha.h)
+        AC_CHECK_FUNCS(SHA256_Init SHA512_Init) 
         CORE_CRYPT_O=""
  fi
 fi
