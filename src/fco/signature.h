@@ -327,21 +327,24 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = CC_SHA1_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = CC_SHA1_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = CC_SHA1_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = CC_SHA1_DIGEST_LENGTH*2
     };
     CC_SHA1_CTX mSHAInfo;
 #elif USE_OPENSSL_SHA
     enum
     {
         SIG_UINT32_SIZE = SHA_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = SHA_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = SHA_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = SHA_DIGEST_LENGTH*2
     };
     SHA_CTX     mSHAInfo;
 #else
     enum
     {
         SIG_UINT32_SIZE = SHA1_DIGEST_SIZE/4,
-        SIG_BYTE_SIZE   = SHA_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = SHA1_DIGEST_SIZE,
+        SIG_HEX_SIZE    = SHA1_DIGEST_SIZE*2
     };
     sha1_ctx mSHAInfo;
 #endif
@@ -410,7 +413,8 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = CC_SHA256_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = CC_SHA256_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = CC_SHA256_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = CC_SHA256_DIGEST_LENGTH*2
     };
     CC_SHA256_CTX mSHAInfo;
     
@@ -418,7 +422,8 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = SHA256_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = SHA256_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = SHA256_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = SHA256_DIGEST_LENGTH*2
     };
     SHA256_CTX     mSHAInfo;
 
@@ -426,8 +431,9 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = SHA256_DIGEST_SIZE/4,
-        SIG_BYTE_SIZE   = SHA256_DIGEST_SIZE
-    };    
+        SIG_BYTE_SIZE   = SHA256_DIGEST_SIZE,
+        SIG_HEX_SIZE    = SHA256_DIGEST_SIZE*2
+    };
     sha256_ctx mSHAInfo;
     
 #endif
@@ -464,7 +470,8 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = CC_SHA512_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = CC_SHA512_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = CC_SHA512_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = CC_SHA512_DIGEST_LENGTH*2
     };
     CC_SHA512_CTX mSHAInfo;
     
@@ -472,7 +479,8 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = SHA512_DIGEST_LENGTH/4,
-        SIG_BYTE_SIZE   = SHA512_DIGEST_LENGTH
+        SIG_BYTE_SIZE   = SHA512_DIGEST_LENGTH,
+        SIG_HEX_SIZE    = SHA512_DIGEST_LENGTH*2
     };
     SHA512_CTX     mSHAInfo;
     
@@ -480,7 +488,8 @@ protected:
     enum
     {
         SIG_UINT32_SIZE = SHA512_DIGEST_SIZE/4,
-        SIG_BYTE_SIZE   = SHA512_DIGEST_SIZE
+        SIG_BYTE_SIZE   = SHA512_DIGEST_SIZE,
+        SIG_HEX_SIZE    = SHA512_DIGEST_SIZE*2
     };
     
     sha512_ctx mSHAInfo;
