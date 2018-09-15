@@ -1,31 +1,31 @@
 //
 // The developer of the original code and/or files is Tripwire, Inc.
-// Portions created by Tripwire, Inc. are copyright (C) 2000 Tripwire,
+// Portions created by Tripwire, Inc. are copyright (C) 2000-2018 Tripwire,
 // Inc. Tripwire is a registered trademark of Tripwire, Inc.  All rights
 // reserved.
-// 
+//
 // This program is free software.  The contents of this file are subject
 // to the terms of the GNU General Public License as published by the
 // Free Software Foundation; either version 2 of the License, or (at your
 // option) any later version.  You may redistribute it and/or modify it
 // only in compliance with the GNU General Public License.
-// 
+//
 // This program is distributed in the hope that it will be useful.
 // However, this program is distributed AS-IS WITHOUT ANY
 // WARRANTY; INCLUDING THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS
 // FOR A PARTICULAR PURPOSE.  Please see the GNU General Public License
 // for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 // USA.
-// 
+//
 // Nothing in the GNU General Public License or any other license to use
 // the code or files shall permit you to use Tripwire's trademarks,
 // service marks, or other intellectual property without Tripwire's
 // prior written consent.
-// 
+//
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
@@ -47,10 +47,10 @@ public:
     cSerializerTestObject();
 
     // iSerializable interface
-    virtual void Read (iSerializer* pSerializer, int32 version = 0);        // throw (eSerializer, eArchive)
-    virtual void Write(iSerializer* pSerializer) const; // throw (eSerializer, eArchive)
+    virtual void Read(iSerializer* pSerializer, int32 version = 0); // throw (eSerializer, eArchive)
+    virtual void Write(iSerializer* pSerializer) const;             // throw (eSerializer, eArchive)
 
-    bool    CheckValid();
+    bool CheckValid();
 
 private:
     int     mNumber;
@@ -73,7 +73,7 @@ bool cSerializerTestObject::CheckValid()
         return false;
 
     int i;
-    for (i=0; i<20; i++)
+    for (i = 0; i < 20; i++)
         if (mData[i] != 69)
             return false;
 
@@ -97,7 +97,6 @@ void cSerializerTestObject::Read(iSerializer* pSerializer, int32 version)
     pSerializer->ReadBlob(mData, 20);
     pSerializer->ReadString(mString);
     mNumber = number;
-
 }
 
 void cSerializerTestObject::Write(iSerializer* pSerializer) const
@@ -119,33 +118,33 @@ void TestSerializerImpl()
     // writing
     {
         cFileArchive file;
-        file.OpenReadWrite(TEMP_DIR _T("/tmp.bin"));
+        file.OpenReadWrite(TwTestPath("tmp.bin").c_str());
         cSerializerImpl serializer(file, cSerializerImpl::S_WRITE);
 
         serializer.Init();
-        
+
         cSerializerTestObject testobj;
         testobj.Write(&serializer);
 
-        db.TraceAlways("    Writeing object 1...\n");
+        db.TraceAlways("    Writing object 1...\n");
         serializer.WriteObject(&testobj);
 
-        db.TraceAlways("    Writeing object 2...\n");
+        db.TraceAlways("    Writing object 2...\n");
         serializer.WriteObject(&testobj);
 
-        db.TraceAlways("    Writeing object 3...\n");
+        db.TraceAlways("    Writing object 3...\n");
         serializer.WriteObject(&testobj);
 
-        db.TraceAlways("    Writeing object 4...\n");
+        db.TraceAlways("    Writing object 4...\n");
         serializer.WriteObject(&testobj);
-        
+
         serializer.Finit();
     }
 
     // reading
     {
         cFileArchive file;
-        file.OpenRead(TEMP_DIR _T("/tmp.bin"));
+        file.OpenRead(TwTestPath("tmp.bin").c_str());
         cSerializerImpl serializer(file, cSerializerImpl::S_READ);
 
         serializer.Init();
@@ -178,3 +177,7 @@ void TestSerializerImpl()
     return;
 }
 
+void RegisterSuite_SerializerImpl()
+{
+    RegisterTest("SerializerImpl", "Basic", TestSerializerImpl);
+}

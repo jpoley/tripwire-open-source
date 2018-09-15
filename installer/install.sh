@@ -28,7 +28,7 @@ fi
 ## The usage message.
 ##-------------------------------------------------------
 
-USAGE="install.sh [<configfile>] [-n] [-f] [-s <sitepassphrase>] [-l <localpassphrase>]"
+USAGE="install.sh [<configfile>] [-n] [-f] [-s <sitepassphrase>] [-l <localpassphrase>] [-d <installdir>]"
 
 ##-------------------------------------------------------
 ## Figure out how to do an echo without newline.
@@ -104,8 +104,10 @@ fi
 ## Miscellaneous configuration parameters.
 ##-------------------------------------------------------
 
-# prefix
-prefix="${prefix:=/usr}"
+# set a few location variables if caller didn't pass them to us
+prefix="${prefix:=/usr/local}"
+sysconfdir="${sysconfdir:=/usr/local/etc}"
+path_to_vi="${path_to_vi:=/usr/bin/vi}"
 
 # License File name
 TWLICENSEFILE="COPYING"
@@ -152,9 +154,15 @@ TAR_DIR=${TAR_DIR:-${START_DIR}}
 
 OS=`uname -s`
 POLICYSRC="twpol-${OS:=GENERIC}.txt"
-if [ ! -r ${TAR_DIR}/policy/${POLICYSRC} ]
-then POLICYSRC="twpol-GENERIC.txt"
+if [ ! -r ${TAR_DIR}/policy/${POLICYSRC} ]; then
+    OS=`uname -o`
+    POLICYSRC="twpol-${OS:=GENERIC}.txt"
 fi
+
+if [ ! -r ${TAR_DIR}/policy/${POLICYSRC} ]; then
+    POLICYSRC="twpol-GENERIC.txt"
+fi
+
 
 ##-------------------------------------------------------
 ## Parse the command line.
@@ -178,6 +186,13 @@ while [ "x$1" != "x" ] ; do
 		exit 1 ;;
 	    *) TW_LOCAL_PASS="$2"; shift ;;
 	    esac ;;
+        -d) case "$2" in
+            "" | -*)
+                echo "Error: missing install dir with -d option." 1>&2
+                echo "$USAGE"
+                exit 1 ;;
+            *) prefix="$2"; sysconfdir="$2/bin"; shift ;;
+            esac ;;
 	-*) echo "Error: unknown argument $1" 1>&2
 	    echo "$USAGE"
 	    exit 1 ;;
@@ -377,9 +392,37 @@ else
 ## Verify that the specified editor program exists
 ##-------------------------------------------------------
 
-DEFAULTEDITOR=${EDITOR:-‘/bin/vi’}
-TWEDITOR=${TWEDITOR:-$DEFAULTEDITOR}
-TWEDITOR_PATH=`command -v $TWEDITOR`
+# If user specified an editor in $path_to_vi or $TWEDITOR, try that first.
+# $path_to_vi defaults to /usr/bin/vi, so we usually succeed here.
+#
+if [ -n ${TWEDITOR} ]; then
+    TWEDITOR_PATH=`command -v $TWEDITOR`
+fi
+
+# If user's environment includes $EDITOR, try that next
+if [ -n ${EDITOR} ] && [ -z ${TWEDITOR_PATH} ]; then
+    TWEDITOR_PATH=`command -v $EDITOR`
+fi
+
+# Ok, now search path for vi
+if [ -z ${TWEDITOR_PATH} ]; then
+    TWEDITOR_PATH=`command -v vi`
+fi
+
+# Try vim in case there isn't a link named vi
+if [ -z ${TWEDITOR_PATH} ]; then
+    TWEDITOR_PATH=`command -v vim`
+fi
+
+# No vi/vim? See if nano is present
+if [ -z ${TWEDITOR_PATH} ]; then
+    TWEDITOR_PATH=`command -v nano`
+fi
+
+# No vi or nano? See if emacs is available
+if [ -z ${TWEDITOR_PATH} ]; then
+    TWEDITOR_PATH=`command -v emacs`
+fi
 
 if [ -n ${TWEDITOR_PATH} ]; then
     TWEDITOR=$TWEDITOR_PATH
